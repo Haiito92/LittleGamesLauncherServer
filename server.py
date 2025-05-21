@@ -11,7 +11,8 @@ class LauncherServer:
         self.__host: str = host
         self.__port: int = port
         self.__server_socket: socket.socket = None
-        self.__running = false
+        self.__running = False
+        
 
     def handle_client(self, conn: socket, addr: tuple[str, int]):
         print(f"[SERVER] Accepted client connection")
