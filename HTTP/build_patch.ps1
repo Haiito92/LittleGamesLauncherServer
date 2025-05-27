@@ -30,9 +30,9 @@ Write-Output "Writing new version to: ""$versionFile""..."
 Set-Content -Path $versionFile -Value $newVersion
 Write-Output "New version written.`n"
 
-Write-Output "Building project..."
-pyinstaller --onefile serverHTTP.py
-Write-Output "`n"
+# Write-Output "Building project..."
+# pyinstaller --onefile serverHTTP.py
+# Write-Output "`n"
 
 cd ../
 

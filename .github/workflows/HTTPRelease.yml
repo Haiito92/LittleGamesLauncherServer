@@ -1,0 +1,40 @@
+name: Release Build and Update
+
+on:
+  push:
+    branches:
+     - master
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout master branch
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install PyInstaller
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+    
+    - name: Build server.exe with PyInstaller
+      run: |
+        cd HTTP
+        pyinstaller --onefile serverHTTP.py
+        cd ../
+
+    - name: Prepare build folder
+      run: |
+        New-Item -ItemType Directory -Path HTTPBuild
+        Copy-Item -Path HTTP/dist/server.exe -Destination HTTPBuild/
+        Copy-Item -Path HTTP/version.txt -Destination HTTPBuild/
+
+    - name: Compress build folder
+      run: |
+        Compress-Archive -Path HTTPbuild/* -DestinationPath HTTPbuild/serverHTTP.zip
