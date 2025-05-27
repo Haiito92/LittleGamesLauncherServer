@@ -6,7 +6,7 @@ on:
      - master
 
 jobs:
-  build-and-release:
+  Build-and-Release:
     runs-on: windows-latest
 
     steps:
@@ -31,10 +31,12 @@ jobs:
 
     - name: Prepare build folder
       run: |
-        New-Item -ItemType Directory -Path HTTPBuild
-        Copy-Item -Path HTTP/dist/server.exe -Destination HTTPBuild/
-        Copy-Item -Path HTTP/version.txt -Destination HTTPBuild/
+        tree /F
 
-    - name: Compress build folder
-      run: |
-        Compress-Archive -Path HTTPbuild/* -DestinationPath HTTPbuild/serverHTTP.zip
+# New-Item -ItemType Directory -Path HTTPBuild
+# Copy-Item -Path HTTP/dist/server.exe -Destination HTTPBuild/
+# Copy-Item -Path HTTP/version.txt -Destination HTTPBuild/
+
+# - name: Compress build folder
+#   run: |
+#     Compress-Archive -Path HTTPbuild/* -DestinationPath HTTPbuild/serverHTTP.zip
