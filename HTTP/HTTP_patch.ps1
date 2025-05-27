@@ -12,7 +12,7 @@ Write-Output "`n"
 cd HTTP
 
 Write-Output "`nChecking current build version..."
-$versionFile = "./dist/version.txt"
+$versionFile = "version.txt"
 $version = Get-Content $versionFile
 Write-Output "Current version: $version`n"
 
