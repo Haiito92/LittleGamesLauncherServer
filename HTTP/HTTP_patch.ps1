@@ -42,8 +42,9 @@ Write-Output "Committing changes..."
 git commit -m "Bump patch version to $newVersion and build"
 Write-Output "`n"
 
-Write-Output "Setting tag..."
+Write-Output "Setting and Pushing tag..."
 git tag v$newVersion
+git push origin v$newVersion
 Write-Output "`n"
 
 Write-Output "Pushing changes to origin master..."
