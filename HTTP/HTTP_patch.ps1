@@ -40,10 +40,14 @@ Write-Output "Adding changes..."
 git add .
 Write-Output "Committing changes..."
 git commit -m "Bump patch version to $newVersion and build"
-
 Write-Output "`n"
+
+Write-Output "Setting tag..."
+git tag v$newVersion
+Write-Output "`n"
+
 Write-Output "Pushing changes to origin master..."
 git push
-
 Write-Output "`n"
+
 Write-Output "End of patch update build process."
