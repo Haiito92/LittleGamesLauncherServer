@@ -54,7 +54,7 @@ jobs:
             <description>LittleGamesLauncherHTTPServer packaged as NuGet</description>
           </metadata>
           <files>
-            <file src="./dist/HTTPserver.exe" target="tools/HTTPserver.exe"/>
+            <file src="./dist/HTTPserver.exe" target="Tools/HTTPserver.exe"/>
           </files>
         </package>
         "@ | Out-File -Encoding utf8 -FilePath "HTTP/LittleGamesLauncherHTTPServer.nuspec"
