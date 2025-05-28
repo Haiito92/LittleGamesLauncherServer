@@ -5,6 +5,10 @@ on:
     branches:
      - master
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   Build-and-Release:
     runs-on: windows-latest
@@ -30,32 +34,46 @@ jobs:
     - name: Build server.exe with PyInstaller
       run: |
         cd HTTP
-        pyinstaller --onefile serverHTTP.py
+        pyinstaller --onefile HTTPserver.py
         cd ../
 
     - name: Create nuspec file
       run: |
         $version = Get-Content -Path HTTP/version.txt
+        $version = $version.Trim()
 
-        echo '<?xml version="1.0"?>' > MyServer.nuspec
-        echo '<package>' >> MyServer.nuspec
-        echo '  <metadata>' >> MyServer.nuspec
-        echo '    <id>MyServerPackage</id>' >> MyServer.nuspec
-        echo '    <version>$version</version>' >> MyServer.nuspec
-        echo '    <authors>YourName</authors>' >> MyServer.nuspec
-        echo '    <owners>YourName</owners>' >> MyServer.nuspec
-        echo '    <requireLicenseAcceptance>false</requireLicenseAcceptance>' >> MyServer.nuspec
-        echo '    <description>MyServer packaged as NuGet</description>' >> MyServer.nuspec
-        echo '  </metadata>' >> MyServer.nuspec
-        echo '  <files>' >> MyServer.nuspec
-        echo '    <file src="HTTP/dist/serverHTTP.exe" target="tools/serverHTTP.exe" />' >> MyServer.nuspec
-        echo '  </files>' >> MyServer.nuspec
-        echo '</package>' >> MyServer.nuspec
+        @"
+        <?xml version="1.0"?>
+        <package>
+          <metadata>
+            <id>LittleGamesLauncherHTTPServer</id>
+            <version>$version</version>
+            <authors>Antoine Hanna</authors>
+            <owners>Antoine Hanna</owners>
+            <requireLicenseAcceptance>false</requireLicenseAcceptance>
+            <description>LittleGamesLauncherHTTPServer packaged as NuGet</description>
+          </metadata>
+          <files>
+            <file src="./dist/HTTPserver.exe" target="tools/HTTPserver.exe"/>
+          </files>
+        </package>
+        "@ | Out-File -Encoding utf8 -FilePath "HTTP/LittleGamesLauncherHTTPServer.nuspec"
 
     - name: Pack NuGet package
       run: |
-        nuget pack MyServer.nuspec -OutputDirectory ./nupkg
+        nuget pack ./HTTP/LittleGamesLauncherHTTPServer.nuspec -OutputDirectory ./HTTP/nupkg
+
+    - name: Set up NuGet config with GitHub credentials
+      run: |
+        dotnet nuget add source "https://nuget.pkg.github.com/Haiito92/index.json" `
+          --name "github" `
+          --username "Haiito92" `
+          --password "${{ secrets.GITHUB_TOKEN }}" `
+          --store-password-in-clear-text
 
     - name: Push to GitHub Packages
       run: |
-        nuget push ./nupkg/*.nupkg -Source "https://nuget.pkg.github.com/Haiito92/index.json" -ApiKey ${{ secrets.GITHUB_TOKEN }}
+        $version = Get-Content -Path HTTP/version.txt
+        $version = $version.Trim()
+
+        nuget push ./HTTP/nupkg/LittleGamesLauncherHTTPServer.$version.nupkg -Source "github"

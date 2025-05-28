@@ -30,10 +30,6 @@ Write-Output "Writing new version to: ""$versionFile""..."
 Set-Content -Path $versionFile -Value $newVersion
 Write-Output "New version written.`n"
 
-# Write-Output "Building project..."
-# pyinstaller --onefile serverHTTP.py
-# Write-Output "`n"
-
 cd ../
 
 Write-Output "Adding changes..."
@@ -41,11 +37,6 @@ git add .
 Write-Output "Committing changes..."
 git commit -m "Bump patch version to $newVersion and build"
 Write-Output "`n"
-
-# Write-Output "Setting and Pushing tag..."
-# git tag v$newVersion
-# git push origin v$newVersion
-# Write-Output "`n"
 
 Write-Output "Pushing changes to origin master..."
 git push
