@@ -76,4 +76,4 @@ jobs:
         $version = Get-Content -Path HTTP/version.txt
         $version = $version.Trim()
 
-        nuget push ./HTTP/nupkg/LittleGamesLauncherHTTPServer.$version.nupkg -Source "github"
+        nuget push ./HTTP/nupkg/LittleGames.Launcher.HTTPServer.$version.nupkg -Source "github"
