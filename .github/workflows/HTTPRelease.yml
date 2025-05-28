@@ -46,7 +46,7 @@ jobs:
         <?xml version="1.0"?>
         <package>
           <metadata>
-            <id>LittleGamesLauncherHTTPServer</id>
+            <id>LittleGames.Launcher.HTTPServer</id>
             <version>$version</version>
             <authors>Antoine Hanna</authors>
             <owners>Antoine Hanna</owners>
