@@ -23,18 +23,39 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller
     
+    - name: Install NuGet CLI
+      run: |
+        choco install nuget.commandline -y
+
     - name: Build server.exe with PyInstaller
       run: |
         cd HTTP
         pyinstaller --onefile serverHTTP.py
         cd ../
 
-    - name: Prepare build folder
+    - name: Create nuspec file
       run: |
-        New-Item -ItemType Directory -Path HTTPBuild
-        Copy-Item -Path HTTP/dist/serverHTTP.exe -Destination HTTPBuild/
-        Copy-Item -Path HTTP/version.txt -Destination HTTPBuild/
+        $version = Get-Content -Path HTTP/version.txt
 
-    - name: Compress build folder
+        echo '<?xml version="1.0"?>' > MyServer.nuspec
+        echo '<package>' >> MyServer.nuspec
+        echo '  <metadata>' >> MyServer.nuspec
+        echo '    <id>MyServerPackage</id>' >> MyServer.nuspec
+        echo '    <version>$version</version>' >> MyServer.nuspec
+        echo '    <authors>YourName</authors>' >> MyServer.nuspec
+        echo '    <owners>YourName</owners>' >> MyServer.nuspec
+        echo '    <requireLicenseAcceptance>false</requireLicenseAcceptance>' >> MyServer.nuspec
+        echo '    <description>MyServer packaged as NuGet</description>' >> MyServer.nuspec
+        echo '  </metadata>' >> MyServer.nuspec
+        echo '  <files>' >> MyServer.nuspec
+        echo '    <file src="HTTP/dist/serverHTTP.exe" target="tools/serverHTTP.exe" />' >> MyServer.nuspec
+        echo '  </files>' >> MyServer.nuspec
+        echo '</package>' >> MyServer.nuspec
+
+    - name: Pack NuGet package
       run: |
-        Compress-Archive -Path HTTPbuild/* -DestinationPath HTTPbuild/serverHTTP.zip
+        nuget pack MyServer.nuspec -OutputDirectory ./nupkg
+
+    - name: Push to GitHub Packages
+      run: |
+        nuget push ./nupkg/*.nupkg -Source "https://nuget.pkg.github.com/Haiito92/index.json" -ApiKey ${{ secrets.GITHUB_TOKEN }}
