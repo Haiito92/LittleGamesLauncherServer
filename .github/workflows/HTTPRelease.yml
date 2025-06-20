@@ -1,0 +1,79 @@
+name: Release Build and Update
+
+on:
+  push:
+    branches:
+     - master
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  Build-and-Release:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout master branch
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install PyInstaller
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+    
+    - name: Install NuGet CLI
+      run: |
+        choco install nuget.commandline -y
+
+    - name: Build server.exe with PyInstaller
+      run: |
+        cd HTTP
+        pyinstaller --onefile HTTPserver.py
+        cd ../
+
+    - name: Create nuspec file
+      run: |
+        $version = Get-Content -Path HTTP/version.txt
+        $version = $version.Trim()
+
+        @"
+        <?xml version="1.0"?>
+        <package>
+          <metadata>
+            <id>LittleGames.Launcher.HTTPServer</id>
+            <version>$version</version>
+            <authors>Antoine Hanna</authors>
+            <owners>Antoine Hanna</owners>
+            <requireLicenseAcceptance>false</requireLicenseAcceptance>
+            <description>LittleGamesLauncherHTTPServer packaged as NuGet</description>
+          </metadata>
+          <files>
+            <file src="./dist/HTTPserver.exe" target="Tools/HTTPserver.exe"/>
+          </files>
+        </package>
+        "@ | Out-File -Encoding utf8 -FilePath "HTTP/LittleGamesLauncherHTTPServer.nuspec"
+
+    - name: Pack NuGet package
+      run: |
+        nuget pack ./HTTP/LittleGamesLauncherHTTPServer.nuspec -OutputDirectory ./HTTP/nupkg
+
+    - name: Set up NuGet config with GitHub credentials
+      run: |
+        dotnet nuget add source "https://nuget.pkg.github.com/Haiito92/index.json" `
+          --name "github" `
+          --username "Haiito92" `
+          --password "${{ secrets.GITHUB_TOKEN }}" `
+          --store-password-in-clear-text
+
+    - name: Push to GitHub Packages
+      run: |
+        $version = Get-Content -Path HTTP/version.txt
+        $version = $version.Trim()
+
+        nuget push ./HTTP/nupkg/LittleGames.Launcher.HTTPServer.$version.nupkg -Source "github"
