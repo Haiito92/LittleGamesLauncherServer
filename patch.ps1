@@ -37,6 +37,10 @@ Write-Output "Pushing changes to origin master..."
 git push
 Write-Output "`n"
 
+Write-Output "Sync dev and master"
+
 git switch dev
+git merge master
+git push
 
 Write-Output "End of patch update build process."
