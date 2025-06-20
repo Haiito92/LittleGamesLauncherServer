@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f79a77dd-85d5-4936-9b34-99c62c155995" name="Changes" comment="" />
+    <list default="true" id="f79a77dd-85d5-4936-9b34-99c62c155995" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/Release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/Release.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/version.txt" beforeDir="false" afterPath="$PROJECT_DIR$/version.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
