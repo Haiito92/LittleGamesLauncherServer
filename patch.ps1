@@ -1,15 +1,12 @@
 Write-Output "Start of patch update build process."
 Write-Output "Fetching all branches.`n"
 
-cd ../
 git fetch origin
 git checkout master
 
 Write-Output "Merging dev into master..."
 git merge --no-ff origin/dev -m "Merge dev into main - patch update"
 Write-Output "`n"
-
-cd HTTP
 
 Write-Output "`nChecking current build version..."
 $versionFile = "version.txt"
@@ -29,8 +26,6 @@ Write-Output "New version: $newVersion`n"
 Write-Output "Writing new version to: ""$versionFile""..."
 Set-Content -Path $versionFile -Value $newVersion
 Write-Output "New version written.`n"
-
-cd ../
 
 Write-Output "Adding changes..."
 git add .
