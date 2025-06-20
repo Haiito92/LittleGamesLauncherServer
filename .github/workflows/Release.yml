@@ -55,11 +55,11 @@ jobs:
             <file src="./dist/server.exe" target="Tools/server.exe"/>
           </files>
         </package>
-        "@ | Out-File -Encoding utf8 -FilePath "HTTP/LittleGamesLauncherHTTPServer.nuspec"
+        "@ | Out-File -Encoding utf8 -FilePath "LittleGamesLauncherServer.nuspec"
 
     - name: Pack NuGet package
       run: |
-        nuget pack ./HTTP/LittleGamesLauncherServer.nuspec -OutputDirectory ./nupkg
+        nuget pack ./LittleGamesLauncherServer.nuspec -OutputDirectory ./nupkg
 
     - name: Set up NuGet config with GitHub credentials
       run: |
